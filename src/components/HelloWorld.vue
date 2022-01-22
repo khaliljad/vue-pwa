@@ -1,7 +1,17 @@
 <template>
   <div class="container d-flex flex-wrap justify-content-between">
+    <div class="input-group m-5">
+      <div class="input-group-prepend"></div>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Add post"
+        v-model="post_data.title"
+      />
+      <button type="submit" @click="AddPost(post_data)">submit</button>
+    </div>
     <div
-      class="card"
+      class="card mb-5"
       style="width: 18rem"
       v-for="post in posts"
       :key="post.id"
@@ -12,36 +22,53 @@
         alt="Card image cap"
       />
       <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+        <h5 class="card-title">{{ post.title | textLength(15) }}</h5>
+        <p class="card-text">{{ post.body | textLength(65) }}</p>
+        <button class="btn btn-danger" @click="deletePost(post.id)">
+          Delete {{ post.id }}
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
+import store from "../store/index";
+import Vuex from "vuex";
+global.v = Vuex;
+
 export default {
   name: "HelloWorld",
+  store: store,
   props: {
     msg: String,
   },
+
   data: function () {
     return {
-      posts: null,
+      post_data: {
+        title: null,
+        id: 1,
+        body: "test body",
+      },
     };
   },
-  mounted() {
-    axios
-      .get("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => (
-        this.posts = response.data
-      ));
+
+  methods: {
+    ...Vuex.mapActions(["AddPost"]),
+    ...Vuex.mapActions(["deletePost"]),
   },
+
+  computed: {
+    ...Vuex.mapGetters(["posts"]),
+  },
+
+  // mounted() {
+  //   axios
+  //     .get("https://jsonplaceholder.typicode.com/posts")
+  //     .then((response) => (this.posts = response.data));
+  // },
 };
 </script>
 
@@ -60,5 +87,8 @@ li {
 }
 a {
   color: #42b983;
+}
+.card-body a {
+  color: #fff;
 }
 </style>

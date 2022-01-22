@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>Vue js Test</h1>
+    <h1>Vue js PWA</h1>
     <HelloWorld msg="Welcome to Your Vue.js App" />
   </div>
 </template>
